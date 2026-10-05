@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Prachiti's Playful Punishment Chamber</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg-gradient);
+      background-image: radial-gradient(#d1fae5 2px, transparent 2px), radial-gradient(#fce7f3 2px, transparent 2px);
+      background-size: 40px 40px;
+      background-position: 0 0, 20px 20px;
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .fun-font { font-family: 'Fredoka', cursive; }
+
+    /* Glassmorphism Panel */
+    .floral-panel {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border: 3px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 15px 35px -5px rgba(236, 72, 153, 0.2);
+    }
+
+    /* Ambient floaters */
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(10deg); }
+    }
+    .ambient-float { animation: floaty 4s ease-in-out infinite; }
+
+    /* Kick Animation (Spin & Bounce) */
+    @keyframes spinBounce {
+      0% { transform: scale(1) translateY(0) rotate(0deg); }
+      20% { transform: scale(0.9) translateY(-60px) rotate(72deg); }
+      40% { transform: scale(1.1) translateY(10px) rotate(144deg); }
+      60% { transform: scale(0.95) translateY(-30px) rotate(216deg); }
+      80% { transform: scale(1.05) translateY(5px) rotate(288deg); }
+      100% { transform: scale(1) translateY(0) rotate(360deg); }
+    }
+    .anim-kick { animation: spinBounce 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+
+    /* Slap Animation (Rapid Shake) */
+    @keyframes rapidShake {
+      0%, 100% { transform: translateX(0) rotate(0deg); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-20px) rotate(-8deg); }
+      20%, 40%, 60%, 80% { transform: translateX(20px) rotate(8deg); }
+    }
+    .anim-slap { animation: rapidShake 0.5s ease-in-out forwards; }
+
+    /* Cake Drop Animation */
+    @keyframes dropIn {
+      0% { transform: translateY(-200px) scale(0.5); opacity: 0; }
+      70% { transform: translateY(10px) scale(1.2); opacity: 1; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .falling-cake {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      margin-left: -40px;
+      font-size: 80px;
+      z-index: 20;
+      animation: dropIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+      pointer-events: none;
+    }
+
+    /* Splat Overlay */
+    @keyframes splatReveal {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.2); opacity: 0.9; }
+      100% { transform: scale(1); opacity: 0.8; }
+    }
+    .splat-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle, rgba(255,255,255,0.9) 20%, rgba(255,220,230,0.8) 50%, transparent 80%);
+      border-radius: 50%;
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0);
+    }
+    .anim-splat .splat-overlay {
+      animation: splatReveal 0.3s forwards;
+      animation-delay: 0.3s; /* Wait for cake to drop */
+    }
+
+    /* Reaction Text Pop */
+    @keyframes popText {
+      0% { transform: scale(0.8); opacity: 0; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .pop-reaction { animation: popText 0.3s ease-out forwards; }
+
+  </style>
+</head>
+<body class="flex flex-col items-center justify-center p-4 sm:p-8 text-slate-800 relative">
+
+  <!-- Ambient background decorations -->
+  <div class="fixed top-10 left-5 text-4xl opacity-60 ambient-float" style="animation-delay: 0s;">🌸</div>
+  <div class="fixed top-20 right-10 text-5xl opacity-50 ambient-float" style="animation-delay: 1s;">✨</div>
+  <div class="fixed bottom-32 left-10 text-5xl opacity-40 ambient-float" style="animation-delay: 2s;">🌼</div>
+  <div class="fixed bottom-20 right-12 text-4xl opacity-60 ambient-float" style="animation-delay: 0.5s;">🌺</div>
+
+  <div class="w-full max-w-lg mx-auto flex flex-col items-center relative z-10 mt-4 sm:mt-8">
+    
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center gap-2 bg-pink-100/90 text-pink-700 px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold mb-3 shadow-sm border border-pink-200">
+        <span>👑</span> PRACHITI'S REVENGE <span>👑</span>
+      </div>
+      <h1 class="fun-font text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-400 drop-shadow-sm leading-tight pb-2">
+        Punish Sangram!
+      </h1>
+      <p class="text-slate-500 font-bold text-sm sm:text-base mt-2">A cute & platonic apology protocol.</p>
+    </div>
+
+    <!-- Main Avatar Container -->
+    <div class="floral-panel rounded-[3rem] p-8 w-full flex flex-col items-center relative">
+      
+      <!-- Avatar Wrapper (Handles animations) -->
+      <div id="avatar-wrapper" class="relative w-48 h-48 sm:w-56 sm:h-56 mb-6">
+        
+        <!-- The Image -->
+        <img 
+          src="IMG-20261003-WA0240.jpg" 
+          alt="Sangram" 
+          class="w-full h-full object-cover rounded-full border-[6px] border-white shadow-xl relative z-0"
+          style="box-shadow: 0 10px 25px rgba(0,0,0,0.1), inset 0 0 0 4px #fbcfe8;"
+        >
+        
+        <!-- Splat Overlay -->
+        <div class="splat-overlay"></div>
+        
+        <!-- Dynamic Cake Element Container -->
+        <div id="cake-container"></div>
+      </div>
+
+      <!-- Reaction Text Box -->
+      <div class="bg-white/80 border-2 border-pink-100 px-6 py-3 rounded-2xl shadow-sm mb-8 w-full text-center min-h-[60px] flex items-center justify-center">
+        <p id="reaction-text" class="fun-font text-lg font-bold text-slate-700 transition-colors">
+          Waiting for your punishment... 🥺
+        </p>
+      </div>
+
+      <!-- Control Buttons -->
+      <div class="grid grid-cols-3 gap-3 w-full">
+        
+        <!-- Kick Button -->
+        <button onclick="triggerKick()" class="group flex flex-col items-center justify-center gap-2 bg-gradient-to-b from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 border-2 border-blue-200 rounded-2xl p-3 sm:p-4 transition-all active:scale-95 shadow-sm hover:shadow-md">
+          <span class="text-3xl sm:text-4xl group-hover:scale-110 transition-transform">🥾</span>
+          <span class="fun-font font-bold text-blue-700 text-sm sm:text-base">Kick</span>
+        </button>
+
+        <!-- Slap Button -->
+        <button onclick="triggerSlap()" class="group flex flex-col items-center justify-center gap-2 bg-gradient-to-b from-rose-50 to-rose-100 hover:from-rose-100 hover:to-rose-200 border-2 border-rose-200 rounded-2xl p-3 sm:p-4 transition-all active:scale-95 shadow-sm hover:shadow-md">
+          <span class="text-3xl sm:text-4xl group-hover:scale-110 transition-transform">🖐️</span>
+          <span class="fun-font font-bold text-rose-700 text-sm sm:text-base">Slap</span>
+        </button>
+
+        <!-- Throw Cake Button -->
+        <button onclick="triggerCake()" class="group flex flex-col items-center justify-center gap-2 bg-gradient-to-b from-amber-50 to-amber-100 hover:from-amber-100 hover:to-amber-200 border-2 border-amber-200 rounded-2xl p-3 sm:p-4 transition-all active:scale-95 shadow-sm hover:shadow-md">
+          <span class="text-3xl sm:text-4xl group-hover:scale-110 transition-transform">🎂</span>
+          <span class="fun-font font-bold text-amber-700 text-sm sm:text-base">Cake</span>
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Audio Context Setup ---
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let actx;
+
+    function initAudio() {
+      if (!actx) actx = new AudioContext();
+      if (actx.state === 'suspended') actx.resume();
+    }
+
+    // Sound: Heavy Thud for Kick
+    function playThud() {
+      initAudio();
+      const osc = actx.createOscillator();
+      const gain = actx.createGain();
+      
+      osc.type = 'sine';
+      // Quick pitch drop for a "thud" impact
+      osc.frequency.setValueAtTime(150, actx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(0.01, actx.currentTime + 0.3);
+      
+      gain.gain.setValueAtTime(1, actx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + 0.3);
+      
+      osc.connect(gain);
+      gain.connect(actx.destination);
+      osc.start();
+      osc.stop(actx.currentTime + 0.3);
+    }
+
+    // Sound: Sharp Smack for Slap
+    function playSmack() {
+      initAudio();
+      const osc = actx.createOscillator();
+      const gain = actx.createGain();
+      
+      osc.type = 'square'; // harsher sound
+      osc.frequency.setValueAtTime(600, actx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(100, actx.currentTime + 0.1);
+      
+      gain.gain.setValueAtTime(0.5, actx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + 0.1);
+      
+      osc.connect(gain);
+      gain.connect(actx.destination);
+      osc.start();
+      osc.stop(actx.currentTime + 0.1);
+    }
+
+    // Sound: Squishy Splat for Cake
+    function playSplat() {
+      initAudio();
+      
+      // Low thud component
+      const oscLow = actx.createOscillator();
+      const gainLow = actx.createGain();
+      oscLow.type = 'triangle';
+      oscLow.frequency.setValueAtTime(200, actx.currentTime);
+      oscLow.frequency.linearRampToValueAtTime(50, actx.currentTime + 0.2);
+      gainLow.gain.setValueAtTime(0.8, actx.currentTime);
+      gainLow.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + 0.3);
+      oscLow.connect(gainLow).connect(actx.destination);
+      
+      // High noisy component (simulated via rapid frequency modulation)
+      const oscHigh = actx.createOscillator();
+      const gainHigh = actx.createGain();
+      oscHigh.type = 'sawtooth';
+      oscHigh.frequency.setValueAtTime(800, actx.currentTime);
+      oscHigh.frequency.exponentialRampToValueAtTime(100, actx.currentTime + 0.2);
+      gainHigh.gain.setValueAtTime(0.3, actx.currentTime);
+      gainHigh.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + 0.2);
+      oscHigh.connect(gainHigh).connect(actx.destination);
+
+      oscLow.start(); oscLow.stop(actx.currentTime + 0.3);
+      oscHigh.start(); oscHigh.stop(actx.currentTime + 0.2);
+    }
+
+
+    // --- UI Interactions & Animations ---
+
+    const avatar = document.getElementById('avatar-wrapper');
+    const reactionText = document.getElementById('reaction-text');
+    const cakeContainer = document.getElementById('cake-container');
+    let isAnimating = false; // Prevent overlapping inputs
+
+    function updateReaction(text, textColorClass) {
+      // Remove animation class to allow re-triggering
+      reactionText.classList.remove('pop-reaction');
+      // Reset classes
+      reactionText.className = `fun-font text-lg font-bold transition-colors ${textColorClass}`;
+      reactionText.innerText = text;
+      
+      // Force reflow and re-add animation
+      void reactionText.offsetWidth; 
+      reactionText.classList.add('pop-reaction');
+    }
+
+    function triggerKick() {
+      if (isAnimating) return;
+      isAnimating = true;
+      playThud();
+      
+      avatar.classList.add('anim-kick');
+      updateReaction("Ouch! Right in the shins! 😭", "text-blue-600");
+
+      setTimeout(() => {
+        avatar.classList.remove('anim-kick');
+        isAnimating = false;
+      }, 800); // Matches animation duration
+    }
+
+    function triggerSlap() {
+      if (isAnimating) return;
+      isAnimating = true;
+      playSmack();
+      
+      avatar.classList.add('anim-slap');
+      updateReaction("Cheek burning... friendship healing! 😵‍💫", "text-rose-600");
+
+      setTimeout(() => {
+        avatar.classList.remove('anim-slap');
+        isAnimating = false;
+      }, 500);
+    }
+
+    function triggerCake() {
+      if (isAnimating) return;
+      isAnimating = true;
+      
+      // Delay sound slightly to match visual impact of dropping cake
+      setTimeout(playSplat, 300); 
+
+      // Create falling cake emoji
+      const cakeEl = document.createElement('div');
+      cakeEl.innerText = '🎂';
+      cakeEl.className = 'falling-cake';
+      cakeContainer.appendChild(cakeEl);
+
+      // Trigger overlay splat
+      avatar.classList.add('anim-splat');
+      updateReaction("Delicious but humiliating! 🧁💥", "text-amber-600");
+
+      // Cleanup
+      setTimeout(() => {
+        avatar.classList.remove('anim-splat');
+        cakeContainer.innerHTML = ''; // Remove cake emoji
+        isAnimating = false;
+      }, 1500); // Wait for splat to fade (or until ready for next action)
+    }
+
+  </script>
+</body>
+</html>
