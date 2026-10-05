@@ -12,17 +12,10 @@
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Canvas Confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
     :root {
       --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-      --pastel-green: #d1fae5;
-      --pastel-pink: #fce7f3;
-      --pastel-purple: #f3e8ff;
-      --pastel-yellow: #fef3c7;
     }
 
     body {
@@ -40,171 +33,164 @@
 
     .fun-font { font-family: 'Fredoka', cursive; }
 
-    /* Glassmorphism Cards */
-    .floral-card {
+    /* Glassmorphism Panel */
+    .floral-panel {
       background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
       border: 3px solid rgba(255, 255, 255, 0.9);
-      box-shadow: 0 15px 35px -5px rgba(236, 72, 153, 0.15);
+      box-shadow: 0 15px 35px -5px rgba(236, 72, 153, 0.2);
     }
 
-    /* Falling Animations for Emojis */
-    @keyframes fallDown {
-      0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
-      80% { opacity: 1; }
-      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
-    }
-    .falling-emoji {
-      position: fixed;
-      z-index: 50;
-      pointer-events: none;
-      animation: fallDown 3s linear forwards;
-      font-size: 2.5rem;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
-    }
-
-    /* Tickle Animation */
-    @keyframes tickleShake {
-      0%, 100% { transform: rotate(0deg) scale(1); }
-      20% { transform: rotate(-15deg) scale(1.1) translateX(-10px); }
-      40% { transform: rotate(15deg) scale(1.1) translateX(10px); }
-      60% { transform: rotate(-10deg) scale(1.1) translateX(-5px); }
-      80% { transform: rotate(10deg) scale(1.1) translateX(5px); }
-    }
-    .tickle-active {
-      animation: tickleShake 0.6s ease-in-out infinite;
-    }
-
-    /* Floating ambient animations */
+    /* Ambient floaters */
     @keyframes floaty {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(10deg); }
     }
-    .ambient-float {
-      animation: floaty 4s ease-in-out infinite;
+    .ambient-float { animation: floaty 4s ease-in-out infinite; }
+
+    /* Kick Animation (Spin & Bounce) */
+    @keyframes spinBounce {
+      0% { transform: scale(1) translateY(0) rotate(0deg); }
+      20% { transform: scale(0.9) translateY(-60px) rotate(72deg); }
+      40% { transform: scale(1.1) translateY(10px) rotate(144deg); }
+      60% { transform: scale(0.95) translateY(-30px) rotate(216deg); }
+      80% { transform: scale(1.05) translateY(5px) rotate(288deg); }
+      100% { transform: scale(1) translateY(0) rotate(360deg); }
     }
-    
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #fbcfe8; border-radius: 4px; }
+    .anim-kick { animation: spinBounce 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+
+    /* Slap Animation (Rapid Shake) */
+    @keyframes rapidShake {
+      0%, 100% { transform: translateX(0) rotate(0deg); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-20px) rotate(-8deg); }
+      20%, 40%, 60%, 80% { transform: translateX(20px) rotate(8deg); }
+    }
+    .anim-slap { animation: rapidShake 0.5s ease-in-out forwards; }
+
+    /* Cake Drop Animation */
+    @keyframes dropIn {
+      0% { transform: translateY(-200px) scale(0.5); opacity: 0; }
+      70% { transform: translateY(10px) scale(1.2); opacity: 1; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .falling-cake {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      margin-left: -40px;
+      font-size: 80px;
+      z-index: 20;
+      animation: dropIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+      pointer-events: none;
+    }
+
+    /* Splat Overlay */
+    @keyframes splatReveal {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.2); opacity: 0.9; }
+      100% { transform: scale(1); opacity: 0.8; }
+    }
+    .splat-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle, rgba(255,255,255,0.9) 20%, rgba(255,220,230,0.8) 50%, transparent 80%);
+      border-radius: 50%;
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0);
+    }
+    .anim-splat .splat-overlay {
+      animation: splatReveal 0.3s forwards;
+      animation-delay: 0.3s; /* Wait for cake to drop */
+    }
+
+    /* Reaction Text Pop */
+    @keyframes popText {
+      0% { transform: scale(0.8); opacity: 0; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .pop-reaction { animation: popText 0.3s ease-out forwards; }
+
   </style>
 </head>
-<body class="flex flex-col items-center justify-start p-4 sm:p-8 text-slate-800 relative">
+<body class="flex flex-col items-center justify-center p-4 sm:p-8 text-slate-800 relative">
 
   <!-- Ambient background decorations -->
-  <div class="fixed top-10 left-10 text-5xl opacity-50 ambient-float" style="animation-delay: 0s;">🌸</div>
-  <div class="fixed bottom-20 right-10 text-5xl opacity-50 ambient-float" style="animation-delay: 1s;">🌼</div>
-  <div class="fixed top-40 right-20 text-4xl opacity-50 ambient-float" style="animation-delay: 2s;">✨</div>
-  <div class="fixed bottom-40 left-20 text-6xl opacity-30 ambient-float" style="animation-delay: 1.5s;">🌿</div>
+  <div class="fixed top-10 left-5 text-4xl opacity-60 ambient-float" style="animation-delay: 0s;">🌸</div>
+  <div class="fixed top-20 right-10 text-5xl opacity-50 ambient-float" style="animation-delay: 1s;">✨</div>
+  <div class="fixed bottom-32 left-10 text-5xl opacity-40 ambient-float" style="animation-delay: 2s;">🌼</div>
+  <div class="fixed bottom-20 right-12 text-4xl opacity-60 ambient-float" style="animation-delay: 0.5s;">🌺</div>
 
-  <header class="z-10 w-full max-w-3xl mx-auto text-center mt-4 mb-8">
-    <div class="inline-flex items-center gap-2 bg-pink-100/90 text-pink-800 px-5 py-2 rounded-full text-sm font-bold mb-4 shadow-sm border border-pink-200">
-      <span>👑</span> OFFICIALLY SANCTIONED BY BESTIE LAW <span>👑</span>
-    </div>
-    <h1 class="fun-font text-4xl sm:text-5xl md:text-6xl font-extrabold text-pink-500 tracking-tight drop-shadow-sm leading-tight">
-      Prachiti's Playful<br>
-      <span class="text-emerald-500">Punishment Chamber</span>
-    </h1>
-    <p class="text-base font-bold text-slate-500 mt-3">(For Sangram! 🤭)</p>
-  </header>
-
-  <main class="z-10 w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 pb-20">
-
-    <!-- LEFT COLUMN: Sangram Representation -->
-    <div class="flex flex-col items-center justify-center">
-      <div class="floral-card rounded-[3rem] p-8 flex flex-col items-center w-full max-w-sm relative overflow-hidden">
-        
-        <!-- Decorative frame -->
-        <div class="absolute -top-4 -left-4 text-5xl">🌿</div>
-        <div class="absolute -bottom-4 -right-4 text-5xl">🌺</div>
-        
-        <h2 class="fun-font text-2xl font-bold text-slate-700 mb-6 text-center z-10">The Guilty Party</h2>
-        
-        <!-- SVG Avatar for Sangram -->
-        <div id="sangram-avatar" class="relative z-10 transition-transform duration-300 drop-shadow-xl cursor-pointer" onclick="tickleSangram()">
-          <svg width="220" height="220" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <!-- Backdrop glow -->
-            <circle cx="100" cy="100" r="90" fill="#fef3c7" />
-            <!-- Body/Hoodie -->
-            <path d="M 40 180 Q 40 120 100 120 Q 160 120 160 180" fill="#64748b" />
-            <!-- Head -->
-            <circle cx="100" cy="85" r="45" fill="#fcd34d" />
-            <!-- Hair -->
-            <path d="M 50 80 Q 60 40 100 35 Q 140 40 145 85 Q 120 50 100 55 Q 70 50 50 80" fill="#1e293b" />
-            <!-- Eyes (Guilty/Nervous) -->
-            <ellipse cx="85" cy="85" rx="5" ry="8" fill="#1e293b" />
-            <ellipse cx="115" cy="85" rx="5" ry="8" fill="#1e293b" />
-            <path d="M 75 75 Q 85 70 95 78" fill="none" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
-            <path d="M 125 75 Q 115 70 105 78" fill="none" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
-            <!-- Sweat drop -->
-            <path d="M 135 65 Q 145 65 140 80 Q 135 80 135 65" fill="#38bdf8" />
-            <!-- Mouth (Awkward smile) -->
-            <path d="M 90 105 Q 100 110 110 103" fill="none" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
-            <!-- Blush -->
-            <ellipse cx="70" cy="95" rx="8" ry="4" fill="#f87171" opacity="0.6"/>
-            <ellipse cx="130" cy="95" rx="8" ry="4" fill="#f87171" opacity="0.6"/>
-          </svg>
-          <!-- Confession Sign -->
-          <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded-xl border-2 border-slate-200 shadow-md transform rotate-3 whitespace-nowrap">
-            <span class="fun-font text-sm font-bold text-slate-600">"I am at your mercy!" 🥺</span>
-          </div>
-        </div>
+  <div class="w-full max-w-lg mx-auto flex flex-col items-center relative z-10 mt-4 sm:mt-8">
+    
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center gap-2 bg-pink-100/90 text-pink-700 px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold mb-3 shadow-sm border border-pink-200">
+        <span>👑</span> PRACHITI'S REVENGE <span>👑</span>
       </div>
+      <h1 class="fun-font text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-400 drop-shadow-sm leading-tight pb-2">
+        Punish Sangram!
+      </h1>
+      <p class="text-slate-500 font-bold text-sm sm:text-base mt-2">A cute & platonic apology protocol.</p>
     </div>
 
-    <!-- RIGHT COLUMN: Punishment Controls -->
-    <div class="flex flex-col gap-5">
+    <!-- Main Avatar Container -->
+    <div class="floral-panel rounded-[3rem] p-8 w-full flex flex-col items-center relative">
       
-      <!-- Option 1: Floral Sentence -->
-      <button onclick="triggerFloral()" class="floral-card group rounded-2xl p-4 flex items-center gap-4 hover:-translate-y-1 hover:shadow-lg transition-all active:scale-95 text-left border-l-8 border-l-pink-400">
-        <div class="bg-pink-100 text-pink-500 text-3xl w-14 h-14 rounded-full flex items-center justify-center shrink-0 group-hover:rotate-12 transition-transform">🌸</div>
-        <div>
-          <h3 class="fun-font text-xl font-bold text-slate-800">1. Floral Sentence</h3>
-          <p class="text-sm font-bold text-slate-500">Drown him in a barrage of cute flowers!</p>
-        </div>
-      </button>
-
-      <!-- Option 2: Guilty Pleasure -->
-      <button onclick="triggerFood()" class="floral-card group rounded-2xl p-4 flex items-center gap-4 hover:-translate-y-1 hover:shadow-lg transition-all active:scale-95 text-left border-l-8 border-l-amber-400">
-        <div class="bg-amber-100 text-amber-500 text-3xl w-14 h-14 rounded-full flex items-center justify-center shrink-0 group-hover:-rotate-12 transition-transform">🍔</div>
-        <div>
-          <h3 class="fun-font text-xl font-bold text-slate-800">2. Guilty Pleasure Drop</h3>
-          <p class="text-sm font-bold text-slate-500">Make it rain pizza, burgers, and boba!</p>
-        </div>
-      </button>
-
-      <!-- Option 3: Tickle-Torture -->
-      <button onclick="tickleSangram()" class="floral-card group rounded-2xl p-4 flex items-center gap-4 hover:-translate-y-1 hover:shadow-lg transition-all active:scale-95 text-left border-l-8 border-l-emerald-400">
-        <div class="bg-emerald-100 text-emerald-500 text-3xl w-14 h-14 rounded-full flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">🪶</div>
-        <div>
-          <h3 class="fun-font text-xl font-bold text-slate-800">3. Tickle-Torture</h3>
-          <p class="text-sm font-bold text-slate-500">Make him jiggle and shake uncontrollably!</p>
-        </div>
-      </button>
-
-      <!-- Option 4: The Big Promise -->
-      <div class="floral-card rounded-2xl p-5 flex flex-col gap-3 border-l-8 border-l-purple-400">
-        <div class="flex items-center gap-3">
-          <div class="bg-purple-100 text-purple-500 text-2xl w-10 h-10 rounded-full flex items-center justify-center shrink-0">📜</div>
-          <h3 class="fun-font text-xl font-bold text-slate-800">4. The Big Promise</h3>
-        </div>
-        <p class="text-sm font-bold text-slate-500">Type a promise he absolutely MUST keep:</p>
-        <div class="flex gap-2">
-          <input type="text" id="promise-input" placeholder="e.g. Treat me to iced coffee..." class="flex-1 bg-white/50 border-2 border-purple-200 rounded-xl px-4 py-2 font-semibold text-slate-700 outline-none focus:border-purple-400 transition-colors">
-          <button onclick="submitPromise()" class="bg-purple-500 hover:bg-purple-600 text-white font-bold px-4 py-2 rounded-xl transition-colors active:scale-95 whitespace-nowrap shadow-md">
-            Submit! ✨
-          </button>
-        </div>
-        <div id="promise-feedback" class="text-xs font-bold text-purple-600 hidden mt-1 bg-purple-100 p-2 rounded-lg text-center"></div>
+      <!-- Avatar Wrapper (Handles animations) -->
+      <div id="avatar-wrapper" class="relative w-48 h-48 sm:w-56 sm:h-56 mb-6">
+        
+        <!-- The Image -->
+        <img 
+          src="IMG-20261003-WA0240.jpg" 
+          alt="Sangram" 
+          class="w-full h-full object-cover rounded-full border-[6px] border-white shadow-xl relative z-0"
+          style="box-shadow: 0 10px 25px rgba(0,0,0,0.1), inset 0 0 0 4px #fbcfe8;"
+        >
+        
+        <!-- Splat Overlay -->
+        <div class="splat-overlay"></div>
+        
+        <!-- Dynamic Cake Element Container -->
+        <div id="cake-container"></div>
       </div>
 
+      <!-- Reaction Text Box -->
+      <div class="bg-white/80 border-2 border-pink-100 px-6 py-3 rounded-2xl shadow-sm mb-8 w-full text-center min-h-[60px] flex items-center justify-center">
+        <p id="reaction-text" class="fun-font text-lg font-bold text-slate-700 transition-colors">
+          Waiting for your punishment... 🥺
+        </p>
+      </div>
+
+      <!-- Control Buttons -->
+      <div class="grid grid-cols-3 gap-3 w-full">
+        
+        <!-- Kick Button -->
+        <button onclick="triggerKick()" class="group flex flex-col items-center justify-center gap-2 bg-gradient-to-b from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 border-2 border-blue-200 rounded-2xl p-3 sm:p-4 transition-all active:scale-95 shadow-sm hover:shadow-md">
+          <span class="text-3xl sm:text-4xl group-hover:scale-110 transition-transform">🥾</span>
+          <span class="fun-font font-bold text-blue-700 text-sm sm:text-base">Kick</span>
+        </button>
+
+        <!-- Slap Button -->
+        <button onclick="triggerSlap()" class="group flex flex-col items-center justify-center gap-2 bg-gradient-to-b from-rose-50 to-rose-100 hover:from-rose-100 hover:to-rose-200 border-2 border-rose-200 rounded-2xl p-3 sm:p-4 transition-all active:scale-95 shadow-sm hover:shadow-md">
+          <span class="text-3xl sm:text-4xl group-hover:scale-110 transition-transform">🖐️</span>
+          <span class="fun-font font-bold text-rose-700 text-sm sm:text-base">Slap</span>
+        </button>
+
+        <!-- Throw Cake Button -->
+        <button onclick="triggerCake()" class="group flex flex-col items-center justify-center gap-2 bg-gradient-to-b from-amber-50 to-amber-100 hover:from-amber-100 hover:to-amber-200 border-2 border-amber-200 rounded-2xl p-3 sm:p-4 transition-all active:scale-95 shadow-sm hover:shadow-md">
+          <span class="text-3xl sm:text-4xl group-hover:scale-110 transition-transform">🎂</span>
+          <span class="fun-font font-bold text-amber-700 text-sm sm:text-base">Cake</span>
+        </button>
+
+      </div>
     </div>
-  </main>
+  </div>
 
   <script>
-    // Audio Context Setup for cute sound effects
+    // --- Audio Context Setup ---
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let actx;
 
@@ -213,152 +199,146 @@
       if (actx.state === 'suspended') actx.resume();
     }
 
-    function playPopSound(freq = 400) {
+    // Sound: Heavy Thud for Kick
+    function playThud() {
       initAudio();
       const osc = actx.createOscillator();
       const gain = actx.createGain();
+      
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, actx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(freq * 1.5, actx.currentTime + 0.1);
-      gain.gain.setValueAtTime(0.1, actx.currentTime);
+      // Quick pitch drop for a "thud" impact
+      osc.frequency.setValueAtTime(150, actx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(0.01, actx.currentTime + 0.3);
+      
+      gain.gain.setValueAtTime(1, actx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + 0.3);
+      
+      osc.connect(gain);
+      gain.connect(actx.destination);
+      osc.start();
+      osc.stop(actx.currentTime + 0.3);
+    }
+
+    // Sound: Sharp Smack for Slap
+    function playSmack() {
+      initAudio();
+      const osc = actx.createOscillator();
+      const gain = actx.createGain();
+      
+      osc.type = 'square'; // harsher sound
+      osc.frequency.setValueAtTime(600, actx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(100, actx.currentTime + 0.1);
+      
+      gain.gain.setValueAtTime(0.5, actx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + 0.1);
+      
       osc.connect(gain);
       gain.connect(actx.destination);
       osc.start();
       osc.stop(actx.currentTime + 0.1);
     }
 
-    function playTickleSound() {
+    // Sound: Squishy Splat for Cake
+    function playSplat() {
       initAudio();
-      let time = actx.currentTime;
-      for (let i = 0; i < 5; i++) {
-        const osc = actx.createOscillator();
-        const gain = actx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(600 + (Math.random() * 400), time + (i * 0.1));
-        gain.gain.setValueAtTime(0.05, time + (i * 0.1));
-        gain.gain.exponentialRampToValueAtTime(0.01, time + (i * 0.1) + 0.05);
-        osc.connect(gain);
-        gain.connect(actx.destination);
-        osc.start(time + (i * 0.1));
-        osc.stop(time + (i * 0.1) + 0.05);
-      }
-    }
-
-    function playSuccessSound() {
-      initAudio();
-      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
-      notes.forEach((freq, i) => {
-        setTimeout(() => {
-          const osc = actx.createOscillator();
-          const gain = actx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, actx.currentTime);
-          gain.gain.setValueAtTime(0.1, actx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + 0.2);
-          osc.connect(gain);
-          gain.connect(actx.destination);
-          osc.start();
-          osc.stop(actx.currentTime + 0.2);
-        }, i * 100);
-      });
-    }
-
-    // --- Helper for Falling Emojis ---
-    function spawnFallingEmojis(emojisList, count) {
-      for (let i = 0; i < count; i++) {
-        setTimeout(() => {
-          const el = document.createElement('div');
-          el.className = 'falling-emoji';
-          el.innerText = emojisList[Math.floor(Math.random() * emojisList.length)];
-          
-          // Randomize horizontal position and animation duration slightly
-          el.style.left = Math.random() * 90 + 'vw';
-          const duration = 2.5 + Math.random() * 1.5;
-          el.style.animationDuration = duration + 's';
-          
-          // Randomize size
-          const size = 1.5 + Math.random() * 2;
-          el.style.fontSize = size + 'rem';
-
-          document.body.appendChild(el);
-          
-          // Optional pop sound on spawn
-          if (Math.random() > 0.5) playPopSound(300 + Math.random() * 400);
-
-          // Clean up after animation finishes
-          setTimeout(() => el.remove(), duration * 1000);
-        }, i * 150); // Stagger the drops
-      }
-    }
-
-    // --- Button 1: Floral Sentence ---
-    function triggerFloral() {
-      const flowers = ['🌸', '🌼', '🌻', '🌺', '🌷', '🌹', '🌿'];
-      spawnFallingEmojis(flowers, 20);
-    }
-
-    // --- Button 2: Guilty Pleasure ---
-    function triggerFood() {
-      const food = ['🍕', '🍔', '🧋', '🍩', '🍟', '🍦', '🍰'];
-      spawnFallingEmojis(food, 20);
-    }
-
-    // --- Button 3: Tickle-Torture ---
-    function tickleSangram() {
-      playTickleSound();
-      const avatar = document.getElementById('sangram-avatar');
       
-      // Prevent resetting animation if already tickling
-      if (avatar.classList.contains('tickle-active')) return;
+      // Low thud component
+      const oscLow = actx.createOscillator();
+      const gainLow = actx.createGain();
+      oscLow.type = 'triangle';
+      oscLow.frequency.setValueAtTime(200, actx.currentTime);
+      oscLow.frequency.linearRampToValueAtTime(50, actx.currentTime + 0.2);
+      gainLow.gain.setValueAtTime(0.8, actx.currentTime);
+      gainLow.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + 0.3);
+      oscLow.connect(gainLow).connect(actx.destination);
       
-      avatar.classList.add('tickle-active');
+      // High noisy component (simulated via rapid frequency modulation)
+      const oscHigh = actx.createOscillator();
+      const gainHigh = actx.createGain();
+      oscHigh.type = 'sawtooth';
+      oscHigh.frequency.setValueAtTime(800, actx.currentTime);
+      oscHigh.frequency.exponentialRampToValueAtTime(100, actx.currentTime + 0.2);
+      gainHigh.gain.setValueAtTime(0.3, actx.currentTime);
+      gainHigh.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + 0.2);
+      oscHigh.connect(gainHigh).connect(actx.destination);
+
+      oscLow.start(); oscLow.stop(actx.currentTime + 0.3);
+      oscHigh.start(); oscHigh.stop(actx.currentTime + 0.2);
+    }
+
+
+    // --- UI Interactions & Animations ---
+
+    const avatar = document.getElementById('avatar-wrapper');
+    const reactionText = document.getElementById('reaction-text');
+    const cakeContainer = document.getElementById('cake-container');
+    let isAnimating = false; // Prevent overlapping inputs
+
+    function updateReaction(text, textColorClass) {
+      // Remove animation class to allow re-triggering
+      reactionText.classList.remove('pop-reaction');
+      // Reset classes
+      reactionText.className = `fun-font text-lg font-bold transition-colors ${textColorClass}`;
+      reactionText.innerText = text;
       
-      // Update confession text temporarily
-      const signText = avatar.querySelector('span');
-      const oldText = signText.innerText;
-      signText.innerText = "HAHAHA STOP IT! 🤣";
-      signText.classList.add('text-rose-500');
+      // Force reflow and re-add animation
+      void reactionText.offsetWidth; 
+      reactionText.classList.add('pop-reaction');
+    }
+
+    function triggerKick() {
+      if (isAnimating) return;
+      isAnimating = true;
+      playThud();
+      
+      avatar.classList.add('anim-kick');
+      updateReaction("Ouch! Right in the shins! 😭", "text-blue-600");
 
       setTimeout(() => {
-        avatar.classList.remove('tickle-active');
-        signText.innerText = oldText;
-        signText.classList.remove('text-rose-500');
-      }, 1500); // Shake for 1.5 seconds
+        avatar.classList.remove('anim-kick');
+        isAnimating = false;
+      }, 800); // Matches animation duration
     }
 
-    // --- Button 4: Submit Promise ---
-    function submitPromise() {
-      const input = document.getElementById('promise-input');
-      const feedback = document.getElementById('promise-feedback');
-      const val = input.value.trim();
+    function triggerSlap() {
+      if (isAnimating) return;
+      isAnimating = true;
+      playSmack();
+      
+      avatar.classList.add('anim-slap');
+      updateReaction("Cheek burning... friendship healing! 😵‍💫", "text-rose-600");
 
-      if (!val) {
-        // Shake input if empty
-        input.classList.add('border-rose-500');
-        setTimeout(() => input.classList.remove('border-rose-500'), 500);
-        return;
-      }
-
-      playSuccessSound();
-
-      // Confetti burst
-      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
-      function randomInRange(min, max) { return Math.random() * (max - min) + min; }
-      const interval = setInterval(function() {
-        const timeLeft = animationEnd - Date.now();
-        if (timeLeft <= 0) return clearInterval(interval);
-        const particleCount = 50 * (timeLeft / 1000);
-        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
-        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
-      }, 250);
-      const animationEnd = Date.now() + 1500;
-
-      // Show Feedback
-      input.value = "";
-      feedback.innerHTML = `Signed and sealed! Sangram MUST: <br><span class="text-emerald-600">"${val}"</span>`;
-      feedback.classList.remove('hidden');
+      setTimeout(() => {
+        avatar.classList.remove('anim-slap');
+        isAnimating = false;
+      }, 500);
     }
+
+    function triggerCake() {
+      if (isAnimating) return;
+      isAnimating = true;
+      
+      // Delay sound slightly to match visual impact of dropping cake
+      setTimeout(playSplat, 300); 
+
+      // Create falling cake emoji
+      const cakeEl = document.createElement('div');
+      cakeEl.innerText = '🎂';
+      cakeEl.className = 'falling-cake';
+      cakeContainer.appendChild(cakeEl);
+
+      // Trigger overlay splat
+      avatar.classList.add('anim-splat');
+      updateReaction("Delicious but humiliating! 🧁💥", "text-amber-600");
+
+      // Cleanup
+      setTimeout(() => {
+        avatar.classList.remove('anim-splat');
+        cakeContainer.innerHTML = ''; // Remove cake emoji
+        isAnimating = false;
+      }, 1500); // Wait for splat to fade (or until ready for next action)
+    }
+
   </script>
 </body>
 </html>
