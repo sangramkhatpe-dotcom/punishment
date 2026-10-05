@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prachiti's Playful Punishment Chamber</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #ffd6e8;
+            background-image: 
+                radial-gradient(circle at 20% 30%, #fff 4px, transparent 5px),
+                radial-gradient(circle at 70% 60%, #fff 4px, transparent 5px),
+                radial-gradient(circle at 40% 80%, #ffb6c1 6px, transparent 7px),
+                radial-gradient(circle at 80% 20%, #ffb6c1 6px, transparent 7px);
+            background-size: 100px 100px;
+            font-family: 'Comic Neue', 'Comic Sans MS', cursive;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .comic-container {
+            background-color: #fff;
+            border: 4px solid #2d2d2d;
+            border-radius: 15px;
+            box-shadow: 12px 12px 0px rgba(0,0,0,0.9);
+            max-width: 900px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Red Damage Flash Overlay */
+        #damage-flash {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255, 0, 0, 0.7);
+            z-index: 50;
+            opacity: 0;
+            pointer-events: none;
+        }
+        @keyframes flashRed {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        .flash-active { animation: flashRed 0.4s ease-out; }
+
+        .header {
+            background-color: #ffe4cd;
+            border-bottom: 4px solid #2d2d2d;
+            padding: 15px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
+            color: #d16b6b;
+            text-shadow: 2px 2px 0 #fff;
+            letter-spacing: 1px;
+            font-weight: 900;
+        }
+
+        .main-stage {
+            display: flex;
+            flex-direction: row;
+            background-color: #ffeef2;
+            position: relative;
+        }
+
+        .scene-area {
+            flex: 2;
+            position: relative;
+            padding: 20px;
+            border-right: 4px solid #2d2d2d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            overflow: hidden; /* Keep flying things inside the panel */
+        }
+
+        .speech-bubble {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #fff;
+            border: 4px solid #2d2d2d;
+            border-radius: 50%;
+            padding: 20px 30px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            box-shadow: 6px 6px 0px #2d2d2d;
+            z-index: 5;
+        }
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            right: 20px;
+            border-width: 15px 15px 0 0;
+            border-style: solid;
+            border-color: #2d2d2d transparent transparent transparent;
+        }
+
+        /* Sangram & Bike Base */
+        .sangram-target {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+        }
+        .sangram-face {
+            font-size: 5rem;
+            margin-bottom: -40px;
+            z-index: 3;
+        }
+        .bike {
+            font-size: 8rem;
+            filter: drop-shadow(6px 6px 0px rgba(0,0,0,0.3));
+        }
+
+        /* Fairy */
+        .prachiti-fairy {
+            position: absolute;
+            top: 40px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: floatFairy 3s ease-in-out infinite;
+        }
+        .fairy-emoji { font-size: 4.5rem; filter: drop-shadow(3px 3px 0px rgba(0,0,0,0.2)); }
+        .sash {
+            background-color: #eadaff;
+            border: 3px solid #2d2d2d;
+            padding: 2px 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border-radius: 10px;
+            transform: rotate(-10deg);
+            margin-top: -15px;
+            z-index: 4;
+            box-shadow: 2px 2px 0 #2d2d2d;
+        }
+        @keyframes floatFairy {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .controls-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #fffaf0;
+        }
+        .punish-btn {
+            flex: 1;
+            border: none;
+            border-bottom: 4px solid #2d2d2d;
+            font-family: inherit;
+            font-size: 1.5rem;
+            font-weight: 900;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            transition: transform 0.1s;
+        }
+        .punish-btn:last-child { border-bottom: none; }
+        .punish-btn:active { transform: scale(0.95); }
+
+        .btn-slap { background-color: #ffcccc; color: #a00; }
+        .btn-kick { background-color: #ffe5b4; color: #8a6327; }
+        .btn-cake { background-color: #eadaff; color: #4a237a; }
+        .btn-floral { background-color: #ffb6c1; color: #b00050; }
+
+        .footer {
+            background-color: #fff3cd;
+            border-top: 4px solid #2d2d2d;
+            text-align: center;
+            padding: 15px;
+        }
+        .footer h2 { margin: 0; font-size: 1.5rem; color: #856404; font-weight: 900; }
+
+        /* --- HARSH IMPACT ANIMATIONS --- */
+        .anim-item {
+            position: absolute;
+            font-size: 5rem;
+            pointer-events: none;
+            z-index: 10;
+            filter: drop-shadow(4px 4px 0px #2d2d2d);
+        }
+
+        /* Violent Screen Shake */
+        @keyframes violentShake {
+            0% { transform: translate(10px, 10px) rotate(0deg); }
+            10% { transform: translate(-15px, -15px) rotate(-3deg); }
+            20% { transform: translate(-15px, 15px) rotate(3deg); }
+            30% { transform: translate(15px, 15px) rotate(0deg); }
+            40% { transform: translate(10px, -10px) rotate(3deg); }
+            50% { transform: translate(-10px, 15px) rotate(-3deg); }
+            60% { transform: translate(-20px, 10px) rotate(0deg); }
+            70% { transform: translate(15px, 10px) rotate(-3deg); }
+            80% { transform: translate(-10px, -10px) rotate(3deg); }
+            90% { transform: translate(10px, 15px) rotate(0deg); }
+            100% { transform: translate(0px, 0px) rotate(0deg); }
+        }
+        .shaking-hard { animation: violentShake 0.4s cubic-bezier(.36,.07,.19,.97); }
+
+        /* Slap Face Damage */
+        @keyframes slapDamage {
+            0% { transform: rotate(0deg) scale(1); }
+            20% { transform: rotate(-45deg) scaleY(0.7) translateX(-40px); }
+            50% { transform: rotate(10deg) scaleY(1.1) translateX(10px); }
+            100% { transform: rotate(0deg) scale(1); }
+        }
+        .slap-hit { animation: slapDamage 0.5s ease-out; }
+
+        /* YEET Animation for Sangram (Kick) */
+        @keyframes yeetAvatar {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            10% { transform: translate(-30px, 0) rotate(-15deg); } /* Wind up back */
+            100% { transform: translate(800px, -400px) rotate(1080deg) scale(0.1); opacity: 0; }
+        }
+        .yeeted { animation: yeetAvatar 0.8s forwards cubic-bezier(0.55, 0.085, 0.68, 0.53); }
+
+        /* Drop back in after Yeet */
+        @keyframes dropIn {
+            0% { transform: translate(0, -500px) scale(1); opacity: 1; }
+            100% { transform: translate(0, 0) scale(1); opacity: 1; }
+        }
+        .drop-back { animation: dropIn 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+
+        /* Hand Fly */
+        @keyframes flySlap {
+            0% { right: -50px; top: 100px; transform: scale(2) rotate(-30deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { right: 250px; top: 130px; transform: scale(3) rotate(15deg); opacity: 0; }
+        }
+        .anim-slap { animation: flySlap 0.3s forwards ease-in; font-size: 6rem; }
+
+        /* Boot Fly */
+        @keyframes flyKick {
+            0% { left: -100px; top: 250px; transform: scale(3) rotate(-60deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { left: 160px; top: 200px; transform: scale(3.5) rotate(30deg); opacity: 0; }
+        }
+        .anim-kick { animation: flyKick 0.3s forwards ease-in; font-size: 7rem; }
+
+        /* Massive Cake Throw */
+        @keyframes flyCake {
+            0% { right: 80px; top: 60px; transform: scale(0.5) rotate(0deg); opacity: 1; }
+            100% { right: 220px; top: 130px; transform: scale(3) rotate(720deg); opacity: 0; }
+        }
+        .anim-cake { animation: flyCake 0.4s forwards ease-in; }
+
+        .splat-mark {
+            position: absolute;
+            font-size: 6rem;
+            z-index: 8;
+            filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.5));
+            animation: splatStay 4s forwards;
+        }
+        @keyframes splatStay {
+            0% { transform: scale(0); }
+            5% { transform: scale(1.5); }
+            10% { transform: scale(1); opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="comic-container">
+        <div id="damage-flash"></div>
+        <div class="header">
+            <h1>PRACHITI'S PLAYFUL PUNISHMENT CHAMBER</h1>
+        </div>
+
+        <div class="main-stage">
+            <div class="scene-area" id="scene-box">
+                <div class="speech-bubble" id="status-text">Ready for my sentence...<br>(gulp)</div>
+                
+                <div class="sangram-target" id="sangram">
+                    <div class="sangram-face">👨🏻</div>
+                    <div class="bike">🏍️</div>
+                </div>
+
+                <div class="prachiti-fairy">
+                    <div class="fairy-emoji">🧚🏻‍♀️️✨</div>
+                    <div class="sash">P-R-A-C-H-I-T-I</div>
+                </div>
+            </div>
+
+            <div class="controls-area">
+                <button class="punish-btn btn-slap" onclick="triggerSlap()">
+                    SLAP! <span>💥</span>
+                </button>
+                <button class="punish-btn btn-kick" onclick="triggerKick()">
+                    KICK! <span>🥾</span>
+                </button>
+                <button class="punish-btn btn-cake" onclick="triggerCake()">
+                    THROW CAKE! <span>🍰</span>
+                </button>
+                <button class="punish-btn btn-floral" onclick="triggerFloral()">
+                    FLORAL SENTENCE <span>🌸</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <h2>ACCEPT VERDICT & GET A SNACK!</h2>
+        </div>
+    </div>
+
+    <script>
+        const scene = document.getElementById('scene-box');
+        const sangram = document.getElementById('sangram');
+        const statusText = document.getElementById('status-text');
+        const flash = document.getElementById('damage-flash');
+
+        // Heavier Synthesized Sounds
+        function playHeavySound(type) {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            if (type === 'slap') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(800, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 0.15);
+                gain.gain.setValueAtTime(1, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+                osc.start(); osc.stop(ctx.currentTime + 0.15);
+            } else if (type === 'kick') {
+                // Deep bass impact
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(100, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(20, ctx.currentTime + 0.4);
+                gain.gain.setValueAtTime(1.5, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                osc.start(); osc.stop(ctx.currentTime + 0.4);
+            } else if (type === 'cake') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(150, ctx.currentTime);
+                osc.frequency.linearRampToValueAtTime(50, ctx.currentTime + 0.2);
+                gain.gain.setValueAtTime(1, ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                osc.start(); osc.stop(ctx.currentTime + 0.3);
+            }
+        }
+
+        function triggerFlash() {
+            flash.classList.remove('flash-active');
+            void flash.offsetWidth; 
+            flash.classList.add('flash-active');
+        }
+
+        function triggerSlap() {
+            statusText.innerHTML = "CRITICAL HIT! 💢";
+            const hand = document.createElement('div');
+            hand.innerText = '👋';
+            hand.className = 'anim-item anim-slap';
+            scene.appendChild(hand);
+
+            setTimeout(() => {
+                playHeavySound('slap');
+                triggerFlash();
+                
+                // Shake screen and distort face
+                document.querySelector('.comic-container').classList.add('shaking-hard');
+                sangram.classList.add('slap-hit');
+                
+                setTimeout(() => {
+                    document.querySelector('.comic-container').classList.remove('shaking-hard');
+                    sangram.classList.remove('slap-hit');
+                }, 500);
+
+            }, 250); // Sync with animation arrival
+
+            setTimeout(() => hand.remove(), 400);
+        }
+
+        function triggerKick() {
+            statusText.innerHTML = "YEETED INTO ORBIT! 🚀";
+            const boot = document.createElement('div');
+            boot.innerText = '🥾';
+            boot.className = 'anim-item anim-kick';
+            scene.appendChild(boot);
+
+            setTimeout(() => {
+                playHeavySound('kick');
+                triggerFlash();
+                document.querySelector('.comic-container').classList.add('shaking-hard');
+                
+                // Send Sangram flying!
+                sangram.classList.remove('drop-back');
+                sangram.classList.add('yeeted');
+
+                // Clean up shake
+                setTimeout(() => {
+                    document.querySelector('.comic-container').classList.remove('shaking-hard');
+                }, 400);
+
+                // Drop Sangram back into frame after a second
+                setTimeout(() => {
+                    sangram.classList.remove('yeeted');
+                    sangram.classList.add('drop-back');
+                    statusText.innerHTML = "Okay, I'm back. I deserved that. 🤕";
+                    playHeavySound('kick'); // Thud when landing
+                    document.querySelector('.comic-container').classList.add('shaking-hard');
+                    setTimeout(() => document.querySelector('.comic-container').classList.remove('shaking-hard'), 300);
+                }, 1200);
+
+            }, 250);
+
+            setTimeout(() => boot.remove(), 400);
+        }
+
+        function triggerCake() {
+            statusText.innerHTML = "MASSIVE SUGAR DAMAGE! 🧁";
+            const cake = document.createElement('div');
+            cake.innerText = '🎂';
+            cake.className = 'anim-item anim-cake';
+            scene.appendChild(cake);
+
+            setTimeout(() => {
+                playHeavySound('cake');
+                document.querySelector('.comic-container').classList.add('shaking-hard');
+                setTimeout(() => document.querySelector('.comic-container').classList.remove('shaking-hard'), 400);
+                
+                // Spawn multiple large splats!
+                for(let i=0; i<4; i++) {
+                    const splat = document.createElement('div');
+                    splat.innerText = '🧁';
+                    splat.className = 'splat-mark';
+                    splat.style.top = `${40 + Math.random() * 100}px`;
+                    splat.style.left = `${60 + Math.random() * 120}px`;
+                    
+                    // Randomize size and rotation for massive impact
+                    const scale = 1 + Math.random();
+                    const rot = Math.random() * 360;
+                    splat.style.transform = `scale(${scale}) rotate(${rot}deg)`;
+                    
+                    scene.appendChild(splat);
+                    setTimeout(() => splat.remove(), 4000);
+                }
+            }, 350);
+
+            setTimeout(() => cake.remove(), 500);
+        }
+
+        function triggerFloral() {
+            statusText.innerHTML = "Aggressive flower power! 🌸";
+            for(let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const flower = document.createElement('div');
+                    flower.innerText = ['🌸', '🌺', '🌼'][Math.floor(Math.random() * 3)];
+                    flower.style.position = 'absolute';
+                    flower.style.fontSize = `${2 + Math.random() * 3}rem`;
+                    flower.style.zIndex = '10';
+                    flower.style.left = `${Math.random() * 80}%`;
+                    flower.style.top = `-50px`;
+                    
+                    // Fall fast!
+                    flower.style.transition = 'all 1s cubic-bezier(.36,.07,.19,.97)';
+                    scene.appendChild(flower);
+                    
+                    setTimeout(() => {
+                        flower.style.top = `${300 + Math.random() * 100}px`;
+                        flower.style.transform = `rotate(${Math.random() * 720}deg)`;
+                    }, 50);
+
+                    setTimeout(() => flower.remove(), 1500);
+                }, i * 30);
+            }
+        }
+    </script>
+</body>
+</html>
